@@ -6,8 +6,8 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using TalkToAPI.Helpers;
 using TalkToAPI.V1.Models;
+using TalkToAPI.V1.Models.DTO;
 using TalkToAPI.V1.Respositories.Interfaces;
 
 namespace TalkToAPI.V1.Controllers

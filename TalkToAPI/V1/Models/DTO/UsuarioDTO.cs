@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace TalkToAPI.Helpers
+namespace TalkToAPI.V1.Models.DTO
 {
     public class UsuarioDTO
     {
@@ -14,6 +14,5 @@ namespace TalkToAPI.Helpers
         [Required]
         [Compare("Senha")]
         public string ConfirmacaoSenha { get; set; }
-        public string Slogan { get; set; }
     }
 }

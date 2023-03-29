@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TalkToAPI.Helpers
+namespace TalkToAPI.V1.Models.DTO
 {
     public class TokenDTO
     {
