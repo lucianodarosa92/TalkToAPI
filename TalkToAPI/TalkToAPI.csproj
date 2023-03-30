@@ -8,6 +8,8 @@
   <ItemGroup>
     <Compile Remove="Migrations\20230329155233_BancoInicial.cs" />
     <Compile Remove="Migrations\20230329155233_BancoInicial.Designer.cs" />
+    <Compile Remove="Migrations\20230329182515_BancoInicial.cs" />
+    <Compile Remove="Migrations\20230329182515_BancoInicial.Designer.cs" />
   </ItemGroup>
 
 
@@ -23,6 +25,11 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.PlatformAbstractions" Version="1.1.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="4.0.1" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Folder Include="Migrations\" />
   </ItemGroup>
 
 </Project>

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -29,6 +30,27 @@ namespace TalkToAPI.V1.Controllers
             _tokenRepository = tokenRepository;
             _signmanager = signmanager;
             _userManager = userManager;
+        }
+
+        [Authorize]
+        [HttpGet("ObterTodos")]
+        public ActionResult ObterTodos()
+        {
+            return Ok(_userManager.Users);
+        }
+
+        [Authorize]
+        [HttpGet("ObterUsuario={id}")]
+        public ActionResult ObterUsuario(string id)
+        {
+            var usuario = _userManager.FindByIdAsync(id).Result;
+
+            if (usuario == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(usuario);
         }
 
         [HttpPost("login")]
@@ -91,11 +113,12 @@ namespace TalkToAPI.V1.Controllers
             }
         }
 
+        [Authorize]
         [HttpPut("atualizar={id}")]
         public ActionResult Atualizar(string id, [FromBody] UsuarioDTO usuarioDTO)
         {
             //TODO - Adicionar filtro de validação
-            
+
             if (_userManager.GetUserAsync(HttpContext.User).Result == null || _userManager.GetUserAsync(HttpContext.User).Result.Id != id)
             {
                 return Forbid();

@@ -9,7 +9,7 @@ using TalkToAPI.Database;
 namespace TalkToAPI.Migrations
 {
     [DbContext(typeof(TalkToContext))]
-    [Migration("20230329182515_BancoInicial")]
+    [Migration("20230330193650_BancoInicial")]
     partial class BancoInicial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -184,11 +184,17 @@ namespace TalkToAPI.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<DateTime?>("Atualizado");
+
                     b.Property<DateTime>("Criado");
 
-                    b.Property<string>("DeId");
+                    b.Property<string>("DeId")
+                        .IsRequired();
 
-                    b.Property<string>("ParaId");
+                    b.Property<bool>("Excluido");
+
+                    b.Property<string>("ParaId")
+                        .IsRequired();
 
                     b.Property<string>("Texto");
 
@@ -276,11 +282,13 @@ namespace TalkToAPI.Migrations
                 {
                     b.HasOne("TalkToAPI.V1.Models.ApplicationUser", "De")
                         .WithMany()
-                        .HasForeignKey("DeId");
+                        .HasForeignKey("DeId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("TalkToAPI.V1.Models.ApplicationUser", "Para")
                         .WithMany()
-                        .HasForeignKey("ParaId");
+                        .HasForeignKey("ParaId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("TalkToAPI.V1.Models.Token", b =>

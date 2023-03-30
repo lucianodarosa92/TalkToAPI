@@ -21,6 +21,8 @@ using TalkToAPI.Database;
 using TalkToAPI.Helpers.Swagger;
 using TalkToAPI.V1.Models;
 using TalkToAPI.V1.Models.DTO;
+using TalkToAPI.V1.Repositories;
+using TalkToAPI.V1.Repositories.Interfaces;
 using TalkToAPI.V1.Respositories;
 using TalkToAPI.V1.Respositories.Interfaces;
 
@@ -54,6 +56,7 @@ namespace TalkToAPI
 
             services.AddScoped<IUsuarioRepository, UsuarioRepository>();
             services.AddScoped<ITokenRepository, TokenRepository>();
+            services.AddScoped<IMensagemRepository, MensagemRepository>();
 
             services.AddDbContext<TalkToContext>(cfg =>
             {

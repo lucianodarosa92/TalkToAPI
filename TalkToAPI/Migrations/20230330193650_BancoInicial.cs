@@ -160,10 +160,12 @@ namespace TalkToAPI.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    DeId = table.Column<string>(nullable: true),
-                    ParaId = table.Column<string>(nullable: true),
+                    DeId = table.Column<string>(nullable: false),
+                    ParaId = table.Column<string>(nullable: false),
                     Texto = table.Column<string>(nullable: true),
-                    Criado = table.Column<DateTime>(nullable: false)
+                    Excluido = table.Column<bool>(nullable: false),
+                    Criado = table.Column<DateTime>(nullable: false),
+                    Atualizado = table.Column<DateTime>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -173,13 +175,13 @@ namespace TalkToAPI.Migrations
                         column: x => x.DeId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Mensagem_AspNetUsers_ParaId",
                         column: x => x.ParaId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
