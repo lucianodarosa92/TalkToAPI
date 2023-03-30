@@ -91,6 +91,53 @@ namespace TalkToAPI.V1.Controllers
             }
         }
 
+        [HttpPut("atualizar={id}")]
+        public ActionResult Atualizar(string id, [FromBody] UsuarioDTO usuarioDTO)
+        {
+            //TODO - Adicionar filtro de validação
+            
+            if (_userManager.GetUserAsync(HttpContext.User).Result == null || _userManager.GetUserAsync(HttpContext.User).Result.Id != id)
+            {
+                return Forbid();
+            }
+
+            if (ModelState.IsValid)
+            {
+                //TODO - Refatorar para AutoMapper
+                //var usuario = new ApplicationUser();
+
+                var usuario = _userManager.GetUserAsync(HttpContext.User).Result;
+
+                usuario.FullName = usuarioDTO.Nome;
+                usuario.UserName = usuarioDTO.Email;
+                usuario.Email = usuarioDTO.Email;
+                usuario.Slogan = usuarioDTO.Slogan;
+
+                //TODO - Remover no Identity critérios de senha
+                var resultado = _userManager.UpdateAsync(usuario).Result;
+                _userManager.RemovePasswordAsync(usuario);
+                _userManager.AddPasswordAsync(usuario, usuarioDTO.Senha);
+
+                if (!resultado.Succeeded)
+                {
+                    var erros = new List<String>();
+                    foreach (var erro in resultado.Errors)
+                    {
+                        erros.Add(erro.Description);
+                    }
+                    return UnprocessableEntity(erros);
+                }
+                else
+                {
+                    return Ok(usuario);
+                }
+            }
+            else
+            {
+                return UnprocessableEntity(ModelState);
+            }
+        }
+
         [HttpPost("renovar")]
         public ActionResult Renovar([FromBody] TokenDTO tokenDTO)
         {

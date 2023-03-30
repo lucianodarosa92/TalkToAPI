@@ -3,19 +3,23 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.PlatformAbstractions;
+using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.AspNetCore.Swagger;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using TalkToAPI.Database;
 using TalkToAPI.Helpers.Swagger;
+using TalkToAPI.V1.Models;
 using TalkToAPI.V1.Models.DTO;
 using TalkToAPI.V1.Respositories;
 using TalkToAPI.V1.Respositories.Interfaces;
@@ -34,11 +38,6 @@ namespace TalkToAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<ApiBehaviorOptions>(options =>
-            {
-                options.SuppressModelStateInvalidFilter = true;
-            });
-
             #region autoMapper-config
             var config = new MapperConfiguration(cfg =>
             {
@@ -48,13 +47,18 @@ namespace TalkToAPI
             services.AddSingleton(mapper);
             #endregion
 
-            services.AddDbContext<TalkToContext>(cfg =>
+            services.Configure<ApiBehaviorOptions>(options =>
             {
-                cfg.UseSqlite("Data Source=DataBase\\TalkTo.db");
+                options.SuppressModelStateInvalidFilter = true;
             });
 
             services.AddScoped<IUsuarioRepository, UsuarioRepository>();
             services.AddScoped<ITokenRepository, TokenRepository>();
+
+            services.AddDbContext<TalkToContext>(cfg =>
+            {
+                cfg.UseSqlite("Data Source=DataBase\\TalkTo.db");
+            });
 
             services.AddMvc(cfg =>
             {
@@ -117,6 +121,27 @@ namespace TalkToAPI
                 });
 
                 cfg.OperationFilter<ApiVersionOperationFilter>();
+            });
+
+            services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddEntityFrameworkStores<TalkToContext>()
+                .AddDefaultTokenProviders();
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("chave-api-jwt-minhas-tarefas")),
+                };
             });
 
             services.AddAuthorization(auth =>
