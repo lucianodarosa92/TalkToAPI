@@ -8,5 +8,6 @@ namespace TalkToAPI.V1.Repositories.Interfaces
         void CadastrarMensagem(Mensagem mensagem);
         void AtualizarMensagem(Mensagem mensagem);
         List<Mensagem> ObterMensagens(string idUsuarioDe, string IdUsuarioPara);
+        Mensagem ObterMensagem(int id);
     }
 }

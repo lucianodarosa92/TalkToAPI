@@ -35,5 +35,10 @@ namespace TalkToAPI.V1.Repositories
 
             return mensagens;
         }
+
+        public Mensagem ObterMensagem(int id)
+        {
+            return _banco.Mensagem.Find(id);
+        }
     }
 }

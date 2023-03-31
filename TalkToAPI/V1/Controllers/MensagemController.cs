@@ -20,18 +20,6 @@ namespace TalkToAPI.V1.Controllers
             _mensagemRepository = mensagemRepository;
         }
 
-        [HttpGet("ObterMensagens={idUsuarioDe}/{idUsuarioPara}")]
-        [Authorize]
-        public ActionResult ObterMensagens(string idUsuarioDe, string idUsuarioPara)
-        {
-            if (idUsuarioDe == idUsuarioPara)
-            {
-                return UnprocessableEntity();
-            }
-
-            return Ok(_mensagemRepository.ObterMensagens(idUsuarioDe, idUsuarioPara));
-        }
-
         [HttpPost("CadastrarMensagem")]
         [Authorize]
         public ActionResult CadastrarMensagem([FromBody] Mensagem mensagem)
@@ -57,11 +45,47 @@ namespace TalkToAPI.V1.Controllers
 
         [HttpPatch("AtualizarMensagem={id}")]
         [Authorize]
-        public ActionResult AtualizarMensagem(int id, [FromBody] JsonPatchDocument<Mensagem> mensagem)
+        public ActionResult AtualizarMensagem(int id, [FromBody] JsonPatchDocument<Mensagem> jsonPath)
         {
+            if (jsonPath == null)
+            {
+                return BadRequest();
+            }
 
+            var mensagem = _mensagemRepository.ObterMensagem(id);
 
-            return Ok();
+            jsonPath.ApplyTo(mensagem);
+            mensagem.Atualizado = DateTime.UtcNow;
+
+            _mensagemRepository.AtualizarMensagem(mensagem);
+
+            return Ok(mensagem);
+        }
+
+        [HttpGet("ObterMensagens={idUsuarioDe}/{idUsuarioPara}")]
+        [Authorize]
+        public ActionResult ObterMensagens(string idUsuarioDe, string idUsuarioPara)
+        {
+            if (idUsuarioDe == idUsuarioPara)
+            {
+                return UnprocessableEntity();
+            }
+
+            return Ok(_mensagemRepository.ObterMensagens(idUsuarioDe, idUsuarioPara));
+        }
+
+        [HttpGet("ObterMensagem={id}")]
+        [Authorize]
+        public ActionResult ObterMensagem(int id)
+        {
+            var mensagem = _mensagemRepository.ObterMensagem(id);
+
+            if (mensagem == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(mensagem);
         }
     }
 }
