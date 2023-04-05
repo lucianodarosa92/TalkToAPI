@@ -38,7 +38,7 @@ namespace TalkToAPI.V1.Controllers
         }
 
         [Authorize]
-        [HttpGet("ObterTodos", Name ="ObterTodos")]
+        [HttpGet("ObterTodos", Name = "ObterTodos")]
         public ActionResult ObterTodos([FromHeader(Name = "Accept")] string mediaType)
         {
             var usuariosAppUser = _userManager.Users.ToList();
@@ -63,7 +63,7 @@ namespace TalkToAPI.V1.Controllers
                 var usuarioDTOSemHyperLink = _mapper.Map<List<ApplicationUser>, List<UsuarioDTOSemHyperLink>>(usuariosAppUser);
 
                 return Ok(usuarioDTOSemHyperLink);
-            }            
+            }
         }
 
         [Authorize]
@@ -122,7 +122,7 @@ namespace TalkToAPI.V1.Controllers
             }
         }
 
-        [HttpPost("cadastrar", Name ="cadastrar")]
+        [HttpPost("cadastrar", Name = "cadastrar")]
         public ActionResult Cadastrar([FromBody] UsuarioDTO usuarioDTO, [FromHeader(Name = "Accept")] string mediaType)
         {
             if (ModelState.IsValid)
@@ -212,7 +212,7 @@ namespace TalkToAPI.V1.Controllers
                         var usuarioDTOdb = _mapper.Map<ApplicationUser, UsuarioDTO>(usuario);
 
                         usuarioDTOdb.Links.Add(new LinkDTO("_self", Url.Link("atualizar", new { id = usuarioDTOdb.Id }), "PUT"));
-                        usuarioDTOdb.Links.Add(new LinkDTO("_ObterUsuario", Url.Link("ObterUsuario", new { id = usuarioDTOdb.Id }), "GET"));                        
+                        usuarioDTOdb.Links.Add(new LinkDTO("_ObterUsuario", Url.Link("ObterUsuario", new { id = usuarioDTOdb.Id }), "GET"));
 
                         return Ok(usuarioDTOdb);
                     }

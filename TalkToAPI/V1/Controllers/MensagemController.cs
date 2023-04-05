@@ -95,7 +95,7 @@ namespace TalkToAPI.V1.Controllers
 
         [HttpGet("ObterMensagens={idUsuarioDe}/{idUsuarioPara}", Name = "ObterMensagens")]
         [Authorize]
-        public ActionResult ObterMensagens(string idUsuarioDe, string idUsuarioPara, [FromHeader(Name ="Accept")] string mediaType)
+        public ActionResult ObterMensagens(string idUsuarioDe, string idUsuarioPara, [FromHeader(Name = "Accept")] string mediaType)
         {
             if (idUsuarioDe == idUsuarioPara)
             {
@@ -105,7 +105,7 @@ namespace TalkToAPI.V1.Controllers
             var mensagens = _mensagemRepository.ObterMensagens(idUsuarioDe, idUsuarioPara);
 
             if (mediaType == CustomMediaType.Hateoas)
-            {                
+            {
                 var mensagensDTO = _mapper.Map<List<Mensagem>, List<MensagemDTO>>(mensagens);
 
                 foreach (var mensagemDTO in mensagensDTO)
