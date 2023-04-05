@@ -9,6 +9,9 @@ namespace TalkToAPI.V1.Models.DTO
             CreateMap<ApplicationUser, UsuarioDTO>()
                 .ForMember(dest => dest.Nome, orig => orig.MapFrom(src => src.FullName));
 
+            CreateMap<ApplicationUser, UsuarioDTOSemHyperLink>()
+                .ForMember(dest => dest.Nome, orig => orig.MapFrom(src => src.FullName));
+
             CreateMap<Mensagem, MensagemDTO>();
         }
     }
