@@ -64,6 +64,18 @@ namespace TalkToAPI
                 cfg.UseSqlite("Data Source=DataBase\\TalkTo.db");
             });
 
+            services.AddCors(cfg=> {
+                cfg.AddDefaultPolicy(policy=> {
+                    policy
+                        .WithOrigins("https://localhost:44376", "http://localhost:44376")
+                        .AllowAnyMethod()
+                        .AllowAnyHeader();
+                });
+
+
+
+            });
+
             services.AddMvc(cfg =>
             {
                 cfg.ReturnHttpNotAcceptable = true;
@@ -188,6 +200,7 @@ namespace TalkToAPI
                 app.UseHsts();
             }
 
+            app.UseCors();
             app.UseStatusCodePages();
             app.UseAuthentication();
             app.UseHttpsRedirection();
